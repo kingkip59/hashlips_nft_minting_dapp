@@ -5,6 +5,54 @@ import { fetchData } from "./redux/data/dataActions";
 import * as s from "./styles/globalStyles";
 import styled from "styled-components";
 
+// METAMASK CONNECTION
+const TIMEOUT = 1000;
+const COLLECTION_NAME = 'Lucys Colorful Friends';
+let editions = [];
+let dots = 1;
+
+window.addEventListener('DOMContentLoaded', () => {
+  const onboarding = new MetaMaskOnboarding();
+  const onboardButton = document.getElementById('connectWallet');
+  let accounts;
+
+  const updateButton = async () => {
+    if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
+      onboardButton.innerText = 'Install MetaMask!';
+      onboardButton.onclick = () => {
+        onboardButton.innerText = 'Connecting...';
+        onboardButton.disabled = true;
+        onboarding.startOnboarding();
+      };
+    } else if (accounts && accounts.length > 0) {
+      onboardButton.innerText = `✔ ...${accounts[0].slice(-4)}`;
+      onboardButton.disabled = true;
+      onboarding.stopOnboarding();
+      checkOwner(accounts[0]);
+    } else {
+      onboardButton.innerText = 'Connect MetaMask!';
+      onboardButton.onclick = async () => {
+        await window.ethereum.request({
+          method: 'eth_requestAccounts',
+        })
+        .then(function(accounts) {
+          onboardButton.innerText = `✔ ...${accounts[0].slice(-4)}`;
+          onboardButton.disabled = true;
+          checkOwner(accounts[0]);
+        });
+      };
+    }
+  };
+
+  updateButton();
+  if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+    window.ethereum.on('accountsChanged', (newAccounts) => {
+      accounts = newAccounts;
+      updateButton();
+    });
+  }
+});
+
 const truncate = (input, len) =>
   input.length > len ? `${input.substring(0, len)}...` : input;
 
@@ -102,22 +150,22 @@ function App() {
   const [feedback, setFeedback] = useState(`Click buy to mint your NFT.`);
   const [mintAmount, setMintAmount] = useState(1);
   const [CONFIG, SET_CONFIG] = useState({
-    CONTRACT_ADDRESS: "",
-    SCAN_LINK: "",
+    CONTRACT_ADDRESS: "0xC06C56E5d7953C93e26374d5B214acb52ECf940F",
+    SCAN_LINK: "https://rinkeby.etherscan.io/address/0xc06c56e5d7953c93e26374d5b214acb52ecf940f",
     NETWORK: {
-      NAME: "",
-      SYMBOL: "",
-      ID: 0,
+      NAME: "Etherscan",
+      SYMBOL: "Eth",
+      ID: 137
     },
-    NFT_NAME: "",
-    SYMBOL: "",
-    MAX_SUPPLY: 1,
-    WEI_COST: 0,
-    DISPLAY_COST: 0,
-    GAS_LIMIT: 0,
-    MARKETPLACE: "",
-    MARKETPLACE_LINK: "",
-    SHOW_BACKGROUND: false,
+    NFT_NAME: "Lucys Colorful Friends",
+  SYMBOL: "LCF",
+  MAX_SUPPL: 300,
+  WEI_COST: 75000000000000000,
+  DISPLAY_COST: 0.0418,
+  GAS_LIMIT: 285000,
+  MARKETPLACE: "Rarible",
+  MARKETPLACE_LINK: "https://rinkeby.rarible.com/collection/0xc06c56e5d7953c93e26374d5b214acb52ecf940f/items",
+  SHOW_BACKGROUND: true
   });
 
   const claimNFTs = () => {
