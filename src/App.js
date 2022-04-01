@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { connect } from "./redux/blockchain/blockchainActions";
-import { fetchData } from "./redux/data/dataActions";
-import * as s from "./styles/globalStyles";
-import styled from "styled-components";
+// import React, { useEffect, useState, useRef } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { connect } from "./redux/blockchain/blockchainActions";
+// import { fetchData } from "./redux/data/dataActions";
+// import * as s from "./styles/globalStyles";
+// import styled from "styled-components";
 
 // METAMASK CONNECTION
 const TIMEOUT = 1000;
@@ -53,8 +53,8 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-const truncate = (input, len) =>
-  input.length > len ? `${input.substring(0, len)}...` : input;
+// const truncate = (input, len) =>
+  // input.length > len ? `${input.substring(0, len)}...` : input;
 
 export const StyledButton = styled.button`
   padding: 10px;
